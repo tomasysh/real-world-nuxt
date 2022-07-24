@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import eventService from '@/services/event.service';
+import { mapState } from 'vuex';
 
 export default {
   head() {
@@ -20,12 +20,9 @@ export default {
       ]
     }
   },
-  async asyncData({ error, params }) {
+  async fetch({ store, error, params }) {
     try {
-      const { data } = await eventService.getEvent(params.id);
-      return {
-        event: data
-      }
+      await store.dispatch('events/fetchEvent', params.id);
     } catch(e) {
       error({
         statusCode: 503,
@@ -33,5 +30,11 @@ export default {
       })
     }
   },
+  // computed: mapState({
+  //   event: state => state.events.event
+  // })
+    computed: {
+      ...mapState('events', ['event'])
+    }
 }
 </script>

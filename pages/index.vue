@@ -11,8 +11,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import EventCard from '@/components/EventCard.vue';
-import eventService from '@/services/event.service';
 
 export default {
   head() {
@@ -23,19 +23,16 @@ export default {
   components: {
     EventCard
   },
-  async asyncData({ error}) {
+  async fetch({ store, error}) {
     try {
-      const { data } = await eventService.getEvents();
-      return {
-        events: data
-      }
+      await store.dispatch('events/fetchEvents');
     } catch(e) {
       error({
         statusCode: 503,
         message: 'Unable to fetch events at this time. Please try again.'
       })
     }
-  }
+  },
   // asyncData({ $axios, error }) {
   //   return $axios.get('http://localhost:3000/events')
   //     .then((res) => {
@@ -50,5 +47,11 @@ export default {
   //       })
   //     });
   // }
+  // computed: mapState({
+  //   events: state => state.events.events
+  // })
+  computed: {
+    ...mapState('events', ['events'])
+  }
 }
 </script>
