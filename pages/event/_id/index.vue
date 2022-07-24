@@ -10,7 +10,7 @@ import { mapState } from 'vuex';
 export default {
   head() {
     return {
-      title: `{ this.event.title }`,
+      title: `${ this.event.title }`,
       meta: [
         {
           hid: 'description',
